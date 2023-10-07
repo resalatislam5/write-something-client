@@ -1,7 +1,7 @@
-function DashboardPage() {
+function DashboardPage() {  
     return (
         <div>
-            dashboard
+            <p>Dashboard</p>
         </div>
     );
 }

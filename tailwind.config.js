@@ -13,6 +13,10 @@ module.exports = {
         'erie-black': '#222222',
         'davy-gray': '#555555'
       },
+      // backgroundImage: {
+      //   'bg_signup': "url('./src/app/ass/Vectors.png')",
+      // }
+
    }
   },
   plugins: [],

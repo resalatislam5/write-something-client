@@ -1,10 +1,12 @@
 'use client'
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineSearch } from 'react-icons/ai';
 import { TfiWrite } from 'react-icons/tfi';
 import { ImCross } from 'react-icons/im';
 import { RxDropdownMenu } from 'react-icons/rx';
+import { FaUser } from 'react-icons/fa';
+import AuthContext from "@/contexts/authContext";
 const navLinks = [
     {
         path: '/',
@@ -17,11 +19,13 @@ const navLinks = [
     {
         path: '/contact',
         name: 'Contact'
-    }
+    },
 ]
 function Header() {
     const [searchToggole, setSearchToggle] = useState(false);
     const [sidebar, setSidebar] = useState(false);
+    const { user, logOut } = useContext(AuthContext)
+    console.log('header', user);
     return (
         <nav>
             {   sidebar?
@@ -30,7 +34,14 @@ function Header() {
                     {
                         navLinks.map(n => <Link className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>,)
                     }
-                    <Link className="hover:text-dark-cyan bg-red-500" href='/login'>Login</Link>
+                    {
+                        !user &&
+                        <Link className="hover:text-dark-cyan bg-red-500" href='/auth/login'>Login</Link>
+                    }
+                    {
+                        user &&
+                        <Link className="hover:text-dark-cyan" href='/dashboard'>Dashboard</Link>
+                    }
                 </div>
             :
             <></>
@@ -46,6 +57,10 @@ function Header() {
                                 {
                                     navLinks.map(n => <Link className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>,)
                                 }
+                                {
+                                    user &&
+                                    <Link className="hover:text-dark-cyan" href='/dashboard'>Dashboard</Link>
+                                }
                             </div>
                             :
                             <></>
@@ -60,12 +75,18 @@ function Header() {
                                     <button onClick={() => setSearchToggle(!searchToggole)}><ImCross /></button>
                                 </div>
                                 :
-                                <button onClick={() => setSearchToggle(!searchToggole)}><AiOutlineSearch /></button>
+                                <button  onClick={() => setSearchToggle(!searchToggole)} ><AiOutlineSearch /></button>
                         }
                     </div>
                     <TfiWrite />
-                        <Link className="lg:flex hover:text-dark-cyan hidden" href='/login'>Login</Link>
-                        <Link className="hover:text-dark-cyan bg-[#FF4F00] text-white sm:px-5 px-2 py-2 rounded-lg text-sm sm:text-lg" href='/signup'>Sign up</Link>
+                        {   !user ?
+                            <>
+                            <Link className="md:flex hover:text-dark-cyan hidden" href='/auth/login'>Login</Link>
+                            <Link className=" bg-[#FF4F00] text-white sm:px-5 px-2 py-2 rounded-lg text-sm sm:text-lg" href='/auth/signup'>Sign up</Link>
+                            </>
+                            :
+                        <button onClick={() => logOut()} className=" bg-[#FF4F00] text-white sm:px-5 px-2 py-2 rounded-lg text-sm sm:text-lg">Logout</button>
+                        }
                     <div className="flex md:hidden">
                         <button className="text-xl" onClick={() => setSidebar(!sidebar)}> <RxDropdownMenu /></button>
                     </div>

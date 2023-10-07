@@ -1,8 +1,12 @@
+import DashboardProvider from "@/middleware/DashboardProvider";
+
 function Dashboardlayout({children}) {
     return (
-        <div>
-            {children}
-        </div>
+        <main>
+            <DashboardProvider>
+                {children}
+            </DashboardProvider> 
+        </main>
     );
 }
 

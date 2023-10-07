@@ -1,4 +1,5 @@
-function HomePage() {
+import { AiOutlineLoading } from 'react-icons/ai';
+const HomePage = async() =>{
     return (
         <div>
             Home
