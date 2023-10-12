@@ -1,7 +1,10 @@
-function DashboardPage() {  
+import Dashboard from "./Dashboard";
+
+function DashboardPage () {  
+
     return (
         <div>
-            <p>Dashboard</p>
+            <Dashboard />
         </div>
     );
 }

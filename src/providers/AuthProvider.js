@@ -6,9 +6,8 @@ import { useEffect, useState } from "react";
 
 const AuthProvider = ({children}) =>{
     const [user, setUser] = useState()
-    const [cookies, setCookie, removeCookie] = useCookies('cookie');
+    const [cookies, setCookie, removeCookie] = useCookies(['cookie']);
     const [lodding, setLodding] = useState(true)
-    console.log(cookies);
     console.log(cookies);
 
     const { replace } = useRouter();
@@ -30,9 +29,9 @@ const AuthProvider = ({children}) =>{
         }
         if (data?.message){
             toast.success(data?.message)
-            const cookie = data?.cookie
-            setCookie('cookie', cookie, { path: '/' }, {maxAge :60 * 60 * 24 * 15})
-            setUser(cookie.user)
+            const tokan = data?.tokan
+            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, {maxAge :60 * 60 * 24 * 15})
+            setUser(data.user)
             replace(from)
         }
     }
@@ -55,17 +54,17 @@ const AuthProvider = ({children}) =>{
         }
         if (data?.user){
             toast.success('User login Successfully')
-            const cookie = data?.cookie
-            setCookie('cookie', cookie, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
-            setUser(cookie.user)
+            const tokan = data?.tokan
+            setCookie('cookie', {tokan, user: data.user}, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
+            setUser(data.user)
             replace(from)
         }
     }
     //logOut
     const logOut = () => {
-        removeCookie('cookie')
+        removeCookie('cookie', {path : '/'})
+        console.log('logout');
         setUser(null)
-        setCookie('null', 'null')
     }
     //private routes
     useEffect(() => {
@@ -81,7 +80,7 @@ const AuthProvider = ({children}) =>{
             }
             return
         }
-        if (cookies.cookie?.user) {
+        if (cookies.cookie) {
             setUser(cookies.cookie?.user)
             setLodding(false)
             if(pathname === '/auth/login'){
@@ -92,7 +91,6 @@ const AuthProvider = ({children}) =>{
             }
         }
     },)
-
     const value = {
         handleSignUp,
         handleLogin,
