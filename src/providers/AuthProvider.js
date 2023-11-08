@@ -70,7 +70,7 @@ const AuthProvider = ({children}) =>{
     useEffect(() => {
         if (!cookies.cookie) {
             console.log('user not found');
-            if (pathname === '/dashboard'){
+            if (pathname === '/dashboard' || pathname === '/dashboard/profile' || pathname === '/dashboard/post' || pathname === '/dashboard/create-post'){
                 if (!cookies.cookie && !user) {
                     replace('/auth/login')
                 }

@@ -78,7 +78,7 @@ function Header() {
                                 <button  onClick={() => setSearchToggle(!searchToggole)} ><AiOutlineSearch /></button>
                         }
                     </div>
-                    <TfiWrite />
+                    <Link href='/dashboard/create-post'><TfiWrite /></Link>
                         {   !user ?
                             <>
                             <Link className="md:flex hover:text-dark-cyan hidden" href='/auth/login'>Login</Link>

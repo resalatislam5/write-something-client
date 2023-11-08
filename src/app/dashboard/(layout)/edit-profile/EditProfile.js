@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import profile from '../../../ass/images.png'
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "@/contexts/authContext";
 import { CgWebsite } from "react-icons/cg";
 import { FaFacebookSquare, FaGithubSquare } from "react-icons/fa";
@@ -60,7 +60,7 @@ function EditProfile() {
             toast.error(data.error?.github)
            }
        }catch(e){
-            console.log(e);
+            toast.error('Somethings error');
        }
     }
     const onSubmit = async(pro) =>{

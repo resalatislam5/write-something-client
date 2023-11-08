@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import DashboardMiddleware from "./DashboardMiddleware";
 import AuthContext from "@/contexts/authContext";
 function DashboardProvider({children}) {
-    const { lodding, user, cookies } = useContext(AuthContext);
+    const { cookies } = useContext(AuthContext);
     const [UserProfileInfo, setUserProfileInfo] = useState('')
     const profileInfo = async () => {
         let res = await fetch('http://localhost:5000/dashboard/profile', {
