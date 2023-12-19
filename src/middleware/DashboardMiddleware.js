@@ -5,7 +5,6 @@ const { default: DashboardContext } = require("@/contexts/dashboardContext")
 const DashboardMiddleware = ({ UserProfileInfo, children }) =>{
     const { lodding, user, cookies } = useContext(AuthContext);
     if (lodding){
-        console.log(lodding);
         return
     }
     const value = {

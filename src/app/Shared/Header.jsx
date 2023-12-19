@@ -5,7 +5,6 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { TfiWrite } from 'react-icons/tfi';
 import { ImCross } from 'react-icons/im';
 import { RxDropdownMenu } from 'react-icons/rx';
-import { FaUser } from 'react-icons/fa';
 import AuthContext from "@/contexts/authContext";
 const navLinks = [
     {
@@ -25,14 +24,13 @@ function Header() {
     const [searchToggole, setSearchToggle] = useState(false);
     const [sidebar, setSidebar] = useState(false);
     const { user, logOut } = useContext(AuthContext)
-    console.log('header', user);
     return (
         <nav>
             {   sidebar?
                 <div className="sidenav ">
                     <button className="ml-[75%] text-white" onClick={() => setSidebar(!sidebar)}><ImCross /></button>
                     {
-                        navLinks.map(n => <Link className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>,)
+                        navLinks.map((n, i) => <Link key={i} className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>)
                     }
                     {
                         !user &&
@@ -48,14 +46,14 @@ function Header() {
             }
             <div className="flex justify-between lg:px-20 md:px-10 sm:px-5 px-2 bg-cool-mint py-10 items-center text-erie-black text-lg">
                 <div className="">
-                    <p className="sm:text-lg text-sm font-semibold"><span className="bg-dark-cyan text-white sm:text-xl text-lg px-2">Write</span> Something</p>
+                    <Link href={'/'} className="sm:text-lg text-sm font-semibold"><span className="text-dark-cyan font-semibold sm:text-xl text-lg px-2">Write</span> Something</Link>
                 </div>
                 <div>
                     {
                         !searchToggole ?
                             <div className="md:flex hidden gap-5">
                                 {
-                                    navLinks.map(n => <Link className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>,)
+                                    navLinks.map((n,i) => <Link key={i} className="hover:text-dark-cyan" href={n.path}>{n.name}</Link>,)
                                 }
                                 {
                                     user &&

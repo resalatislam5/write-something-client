@@ -9,7 +9,7 @@ function LoginPage() {
                     <h1 className="sm:text-7xl text-4xl text-center">Login</h1>
                     <p className="text-sm sm:text-lg">Login and start managing your candidates!</p>
                     <LoginFrom />
-                    <p> If you haven't an account,please? <Link className="text-dark-cyan font-bold" href="/auth/signup">Sign Up</Link></p>
+                    <p> If you haven't an account, please? <Link className="text-dark-cyan font-bold" href="/auth/signup">Sign Up</Link></p>
                 </div>
             </div>
        </main>

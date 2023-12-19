@@ -1,4 +1,5 @@
 'use client'
+import Loading from "@/app/components/Loading";
 import AuthContext from "@/contexts/authContext";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
@@ -6,116 +7,116 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-function EditPost( {id} ) {
-        const [body, setBody] = useState(false);
-        const [userPost, setUserPost] = useState([]);
-        const { cookies, lodding } = useContext(AuthContext);
-        const {replace} = useRouter()
-        if (lodding) {
-            return
+function EditPost({ id }) {
+    const [body, setBody] = useState(false);
+    const [userPost, setUserPost] = useState([]);
+    const editorRef = useRef(null);
+
+    const { cookies, lodding, setButtonLodding, buttonLodding } = useContext(AuthContext);
+    const { replace } = useRouter()
+    const { register, handleSubmit, reset } = useForm()
+    // if (lodding) {
+    //     return;
+    // }
+    //get one user data
+    const fetchData = async () => {
+        const res = await fetch(`https://write-something-server.vercel.app/post/user-post/${id}`, {
+            method: 'GET',
+            headers: {
+                'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
+                'Content-type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        setUserPost(data)
+        reset(data)
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+    if (lodding) {
+        return;
+    }
+    const log = () => {
+        if (editorRef.current) {
+            setBody(editorRef.current.getContent())
         }
-        const { register, handleSubmit,reset } = useForm()
-        //get one user data
-        const fetchData = async () => {
-            const res = await fetch(`http://localhost:5000/post/user-post/${id}`, {
-                method: 'GET',
+    };
+    //update data
+    const createProfile = async (value) => {
+        setButtonLodding(true)
+        try {
+            let res = await fetch(`https://write-something-server.vercel.app/post/user-post/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(value),
                 headers: {
                     'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
                     'Content-type': 'application/json'
                 }
             })
             const data = await res.json()
-            setUserPost(data)
-            reset(data)
+            if (data) {
+                setButtonLodding(false)
+            }
+            if (data.message) {
+                toast.success(data.message)
+                replace('/dashboard/post')
+            }
+            if (data.error) {
+                data.error?.title &&
+                    toast.error(data.error?.title)
+                data.error?.body &&
+                    toast.error(data.error?.body)
+            }
+        } catch (e) {
+           toast.error('Something was wrong')
         }
-        useEffect(() => {
-            fetchData()
-        }, [])
-            const editorRef = useRef(null);
-
-        const log = () => {
-            if (editorRef.current) {
-                setBody(editorRef.current.getContent())
-                console.log(editorRef.current.getContent());
+    }
+    const onSubmit = async (postData) => {
+        const { image, title, tags } = postData
+        const data = new FormData()
+        data.append('image', image[0])
+        if (image[0]) {
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.YOUR_CLIENT_API_KEY}`, {
+                method: 'POST',
+                body: data
+            })
+            const imageData = await res.json()
+            if (imageData.error) {
+                toast.error(imageData.error.message)
             }
-        };
-        //update data
-        const createProfile = async (value) => {
-
-            console.log('value', value);
-            try {
-                let res = await fetch(`http://localhost:5000/post/user-post/${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(value),
-                    headers: {
-                        'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
-                        'Content-type': 'application/json'
-                    }
-                })
-                const data = await res.json()
-                console.log(data);
-                if (data.message) {
-                    toast.success(data.message)
-                    replace('/dashboard/post')
+            if (imageData.success) {
+                const thumbnail = imageData.data.url
+                const post = {
+                    thumbnail,
+                    body,
+                    title,
+                    tags
                 }
-                if (data.error) {
-                    data.error?.title &&
-                        toast.error(data.error?.title)
-                    data.error?.body &&
-                        toast.error(data.error?.body)
-                }
-            } catch (e) {
-                console.log(e);
+                createProfile(post)
+                return
             }
         }
-        const onSubmit = async (postData) => {
-            const { image, title, tags } = postData
-            console.log(postData);
-            const data = new FormData()
-            data.append('image', image[0])
-            if(image[0]){
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.YOUR_CLIENT_API_KEY}`, {
-                    method: 'POST',
-                    body: data
-                })
-                const imageData = await res.json()
-                if (imageData.error) {
-                    toast.error(imageData.error.message)
-                }
-                if (imageData.success) {
-                    const thumbnail = imageData.data.url
-                    const post = {
-                        thumbnail,
-                        body,
-                        title,
-                        tags
-                    }
-                    createProfile(post)
-                    console.log('update user with image', post);
-                    return
-                }
-            }
-            const post = {
-                thumbnail: userPost.thumbnail,
-                body,
-                title,
-                tags
-            }
-            createProfile(post)
-            console.log('update user without image', post);
+        const post = {
+            thumbnail: userPost.thumbnail,
+            body,
+            title,
+            tags
         }
+        createProfile(post)
+    }
 
     return (
         <div>
             <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="text-lg w-full flex flex-col gap-2">
                     <p className="font-medium">Enter Your Title:</p>
-                    <input className="border-2 rounded-lg px-3 py-2" type="text" placeholder="Enter your Title" {...register('title')} required />
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="text" placeholder="Enter your Title" {...register('title')} required />
                 </div>
                 <div className="text-lg w-full flex flex-col gap-2">
-                    <Image width={200} height={200} style={{ borderRadius: '100%' }} src={userPost.thumbnail} alt="user photo" />
+                    <Image width={200} height={200} src={userPost.thumbnail} alt="user photo" />
                     <p className="font-medium">choose Thumbnail:</p>
-                    <input className="border-2 rounded-lg px-3 py-2"  type="file" accept="image/*" {...register('image')} />
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="file" accept="image/*" {...register('image')} />
                 </div>
                 <Editor
                     apiKey={process.env.TINY_API_KEY}
@@ -162,9 +163,14 @@ function EditPost( {id} ) {
                 />
                 <div className="text-lg w-full flex flex-col gap-2">
                     <p className="font-medium">Enter Some Tag(max 10)</p>
-                    <input className="border-2 rounded-lg px-3 py-2" type="text" placeholder="tag1, tag2, tag3" {...register('tags')} required />
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="text" placeholder="tag1, tag2, tag3" {...register('tags')} required />
                 </div>
-                <input onClick={log} className="bg-dark-cyan py-2 cursor-pointer text-lg text-white rounded-none" type="submit" value="Create Post" />
+                {
+                    buttonLodding ?
+                        <p className="bg-dark-cyan  py-2 text-lg rounded-none cursor-wait"><Loading /></p>
+                        :
+                        <input onClick={log} className="bg-dark-cyan py-2 cursor-pointer text-lg text-white rounded-none" type="submit" value="Edit Post" />
+                }
             </form>
         </div>
     );

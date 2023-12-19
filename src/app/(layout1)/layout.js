@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import Footer from "../Shared/Footer";
 import Header from "../Shared/Header";
 
 function layout({children}) {
@@ -5,6 +7,7 @@ function layout({children}) {
         <div className="max-w-[2560px]">
             <Header />
             {children}
+            <Footer />
         </div>
     );
 }

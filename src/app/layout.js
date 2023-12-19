@@ -1,9 +1,12 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Noto_Sans } from 'next/font/google'
 import  { Toaster } from 'react-hot-toast';
 import Provider from '@/providers';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Noto_Sans({ 
+  weight: ['400','500', '600', '700', '800'],
+  subsets: ['latin'] 
+})
 
 export const metadata = {
   title: 'Write Something',

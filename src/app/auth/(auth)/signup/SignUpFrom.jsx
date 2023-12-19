@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 function SignUpFrom() {
     const { register, handleSubmit, formState: { errors }, watch } = useForm()
-    const { handleSignUp } = useContext(AuthContext)
+    const { handleSignUp, buttonLodding } = useContext(AuthContext)
     const search = useSearchParams();
     const from = search.get("redirectUrl") || "/";
    
@@ -26,7 +26,7 @@ function SignUpFrom() {
         <div >
             <form onSubmit={handleSubmit(onSubmit)} className={`flex flex-col ${Object.keys(errors).length !== 0 ? 'gap-2' : 'gap-3'}`}>
                 <input className="px-5 py-3 rounded-md bg-[#224957] text-white" type="text" name="name" placeholder="Enter your name" {...register('name', {maxLength
-                    : { value: 30, message: 'Name can\'t be more then 30' }, pattern: {value :/^[A-Za-z]+$/i, message: 'Please enter your valid name'}})} required />
+                    : { value: 30, message: 'Name can\'t be more then 30' }, pattern: { value: /^[A-Za-z\s]+$/, message: 'Please enter your valid name'}})} required />
                     <p className="text-sm text-red-600 font-bold">{errors?.name?.message}</p>
                 <input className="px-5 py-3 rounded-md bg-[#224957] text-white" type="email" name="email" id="" placeholder="Enter your email" {...register('email')} required/>
                 <p className="text-sm text-red-600 font-bold">{errors?.email?.message}</p>
@@ -40,7 +40,11 @@ function SignUpFrom() {
                         }
                     }})} required />
                 <p className="text-sm text-red-600 font-bold">{errors?.confirm?.message}</p>
-                <input className="px-5 py-3 rounded-md bg-[#20DF7F] text-white" type="submit" value="Sign Up" />
+                {buttonLodding ?
+                    <input className="px-5 py-3 cursor-pointer opacity-25 rounded-md bg-[#20DF7F] text-white" type="submit" value="Sign Up" disabled/>
+                    :
+                    <input className="px-5 py-3 cursor-pointer rounded-md bg-[#20DF7F] text-white" type="submit" value="Sign Up" />
+                }
             </form>
         </div>
     );

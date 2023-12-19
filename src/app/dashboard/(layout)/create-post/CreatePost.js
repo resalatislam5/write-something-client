@@ -1,4 +1,5 @@
 'use client'
+import Loading from "@/app/components/Loading";
 import AuthContext from "@/contexts/authContext";
 import { Editor } from "@tinymce/tinymce-react";
 import { useRouter } from "next/navigation";
@@ -7,24 +8,23 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 function CreatePost() {
-    const { cookies, lodding } = useContext(AuthContext)
-    if (lodding) {
-        return
-    }
+    const { cookies, lodding, setButtonLodding, buttonLodding } = useContext(AuthContext)
     const [body, setBody] = useState()
     const { replace } = useRouter();
     const { register, handleSubmit } = useForm()
     const editorRef = useRef(null);
+    if (lodding) {
+        return
+    }
     const log = () => {
         if (editorRef.current) {
             setBody(editorRef.current.getContent())
-            console.log(editorRef.current.getContent());
         }
     };
     const createProfile = async (value) => {
-        console.log('value', value);
+        setButtonLodding(true)
         try {
-            let res = await fetch('http://localhost:5000/post', {
+            let res = await fetch('https://write-something-server.vercel.app/post', {
                 method: 'POST',
                 body: JSON.stringify(value),
                 headers: {
@@ -33,7 +33,9 @@ function CreatePost() {
                 }
             })
             const data = await res.json()
-            console.log(data);
+            if (data) {
+                setButtonLodding(false)
+            }
             if (data.message) {
                 toast.success(data.message)
                 replace('/dashboard')
@@ -45,11 +47,12 @@ function CreatePost() {
                     toast.error(data.error?.body)
             }
         } catch (e) {
-            console.log(e);
+            toString.error('Something was wrong')
         }
     }
     const onSubmit = async (postData) => {
-        const {image, title, tags} = postData
+        setButtonLodding(true)
+        const { image, title, tags } = postData
         const data = new FormData()
         data.append('image', image[0])
         const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.YOUR_CLIENT_API_KEY}`, {
@@ -61,7 +64,7 @@ function CreatePost() {
             toast.error(imageData.error.message)
         }
         if (imageData.success) {
-           const thumbnail = imageData.data.url
+            const thumbnail = imageData.data.url
             const post = {
                 thumbnail,
                 body,
@@ -69,7 +72,6 @@ function CreatePost() {
                 tags
             }
             createProfile(post)
-            console.log(post);
         }
     }
     return (
@@ -77,11 +79,11 @@ function CreatePost() {
             <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="text-lg w-full flex flex-col gap-2">
                     <p className="font-medium">Enter Your Title:</p>
-                    <input className="border-2 rounded-lg px-3 py-2" type="text" placeholder="Enter your Title" {...register('title')} required />
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="text" placeholder="Enter your Title" {...register('title')} required />
                 </div>
                 <div className="text-lg w-full flex flex-col gap-2">
                     <p className="font-medium">choose Thumbnail:</p>
-                    <input className="border-2 rounded-lg px-3 py-2" type="file" accept="image/*" placeholder="Enter your Title" {...register('image')} required/>
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="file" accept="image/*" placeholder="Enter your Title" {...register('image')} required />
                 </div>
                 <Editor
                     apiKey={process.env.TINY_API_KEY}
@@ -123,14 +125,19 @@ function CreatePost() {
 
                             input.click();
                         },
-                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px}',
                     }}
                 />
                 <div className="text-lg w-full flex flex-col gap-2">
                     <p className="font-medium">Enter Some Tag(max 10)</p>
-                    <input className="border-2 rounded-lg px-3 py-2" type="text" placeholder="tag1, tag2, tag3" {...register('tags')} required/>
+                    <input className="border-2 rounded-lg px-3 py-2 border-gray-300" type="text" placeholder="tag1, tag2, tag3" {...register('tags')} required />
                 </div>
-                <input onClick={log} className="bg-dark-cyan py-2 cursor-pointer text-lg text-white rounded-none" type="submit" value="Create Post" />
+                {
+                    buttonLodding ?
+                        <p className="bg-dark-cyan  py-2 text-lg rounded-none cursor-wait"><Loading /></p>
+                        :
+                        <input onClick={log} className="bg-dark-cyan  py-2 cursor-pointer text-lg text-white rounded-none" type="submit" value="Create Post" />
+                }
             </form>
         </div>
     );

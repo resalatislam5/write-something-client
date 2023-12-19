@@ -112,3 +112,38 @@
     background-position: bottom;
     background-size: contain;
 }
+
+/* coustom-pagination */
+.coustom-pagination ul{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+.coustom-pagination ul li a{
+    color: #666;
+    border: 1px solid #818181;
+    padding: 8px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+.coustom-pagination ul .active a{
+    color: white;
+    background: #00AAA1;
+}
+.coustom-pagination ul li a:hover{
+    border: 1px solid #00AAA1;
+    background-color: #00AAA1;
+    color: white;
+}
+/* responsive pagination  */
+@media only screen and (max-width: 550px) {
+    .coustom-pagination ul {
+        gap: 5px;
+    }
+    .coustom-pagination ul li a {
+        padding: 7px 7px;
+    }
+}
+html{
+    scroll-behavior: smooth;
+}

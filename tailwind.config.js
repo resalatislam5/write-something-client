@@ -9,14 +9,10 @@ module.exports = {
    extend:{
       colors: {
         'cool-mint': '#E8F3F3',
-        'dark-cyan': '#008780',
+        'dark-cyan': '#00AAA1',
         'erie-black': '#222222',
         'davy-gray': '#555555'
       },
-      // backgroundImage: {
-      //   'bg_signup': "url('./src/app/ass/Vectors.png')",
-      // }
-
    }
   },
   plugins: [],

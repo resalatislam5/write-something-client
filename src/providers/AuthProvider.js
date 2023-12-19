@@ -4,18 +4,19 @@ import toast from "react-hot-toast";
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 
-const AuthProvider = ({children}) =>{
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState()
     const [cookies, setCookie, removeCookie] = useCookies(['cookie']);
     const [lodding, setLodding] = useState(true)
-    console.log(cookies);
+    const [buttonLodding, setButtonLodding] = useState(false)
 
     const { replace } = useRouter();
     const pathname = usePathname()
 
     //signUp
     const handleSignUp = async (user, from) => {
-        const res = await fetch('http://localhost:5000/auth/signup', {
+        setButtonLodding(true)
+        const res = await fetch('https://write-something-server.vercel.app/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,21 +24,24 @@ const AuthProvider = ({children}) =>{
             body: JSON.stringify(user)
         })
         const data = await res.json();
-        console.log(data);
-        if (data?.email){
+        if (data) {
+            setButtonLodding(false)
+        }
+        if (data?.email) {
             toast.error(data?.email || 'The user creates unsuccessfully')
         }
-        if (data?.message){
+        if (data?.message) {
             toast.success(data?.message)
             const tokan = data?.tokan
-            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, {maxAge :60 * 60 * 24 * 15})
+            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
             setUser(data.user)
             replace(from)
         }
     }
-        //login
+    //login
     const handleLogin = async (user, from) => {
-        const res = await fetch('http://localhost:5000/auth/login', {
+        setButtonLodding(true)
+        const res = await fetch('https://write-something-server.vercel.app/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,37 +49,38 @@ const AuthProvider = ({children}) =>{
             body: JSON.stringify(user)
         })
         const data = await res.json();
-        
-        console.log(data);
+        if (data) {
+            setButtonLodding(false)
+        }
 
 
-        if(data?.message){
+        if (data?.message) {
             toast.error(data?.message)
         }
-        if (data?.user){
+        if (data?.user) {
             toast.success('User login Successfully')
             const tokan = data?.tokan
-            setCookie('cookie', {tokan, user: data.user}, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
+            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
             setUser(data.user)
             replace(from)
         }
     }
     //logOut
     const logOut = () => {
-        removeCookie('cookie', {path : '/'})
-        console.log('logout');
+        removeCookie('cookie', { path: '/' })
         setUser(null)
     }
     //private routes
     useEffect(() => {
         if (!cookies.cookie) {
-            console.log('user not found');
-            if (pathname === '/dashboard' || pathname === '/dashboard/profile' || pathname === '/dashboard/post' || pathname === '/dashboard/create-post'){
+            if (pathname === '/dashboard' || pathname === '/dashboard/profile' || pathname === '/dashboard/post' || pathname === '/dashboard/create-post'
+                || pathname === '/dashboard/edit-profile' || pathname === '/dashboard/edit-post'
+            ) {
                 if (!cookies.cookie && !user) {
                     replace('/auth/login')
                 }
             }
-            if(user){
+            if (user) {
                 setLodding(false)
             }
             return
@@ -83,14 +88,78 @@ const AuthProvider = ({children}) =>{
         if (cookies.cookie) {
             setUser(cookies.cookie?.user)
             setLodding(false)
-            if(pathname === '/auth/login'){
+            if (pathname === '/auth/login') {
                 replace('/')
             }
-            if(pathname === '/auth/signup'){
+            if (pathname === '/auth/signup') {
                 replace('/')
             }
         }
     },)
+    //likes handaler
+    const handleLikes = async (id, featuredData) => {
+        const res = await fetch(`https://write-something-server.vercel.app/post/likes/${id}`, {
+            method: 'POST',
+            headers: {
+                'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
+                'Content-type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        if (data.message) {
+            toast.success(data.message)
+            featuredData()
+        }
+        if (data.error) {
+            toast.error(data.error)
+            if (!user) {
+                replace("/auth/login")
+            }
+        }
+    }
+    //dislikes handaler
+    const handleDislikes = async (id, featuredData) => {
+        const res = await fetch(`https://write-something-server.vercel.app/post/dislikes/${id}`, {
+            method: 'POST',
+            headers: {
+                'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
+                'Content-type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        if (data.message) {
+            toast.success(data.message)
+            featuredData()
+        }
+        if (data.error) {
+            toast.error(data.error)
+            if (!user) {
+                replace("/auth/login")
+            }
+        }
+    }
+    //handleBookmark handaler
+    const handleBookmark = async (id, featuredData) => {
+        // setButtonLodding(true)
+        const res = await fetch(`https://write-something-server.vercel.app/post/bookmarks/${id}`, {
+            method: 'POST',
+            headers: {
+                'authorizantion': `Bearer ${cookies.cookie?.tokan}`,
+                'Content-type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        if (data.message) {
+            toast.success(data.message)
+            featuredData()
+        }
+        if (data.error) {
+            toast.error(data.error)
+            if (!user) {
+                replace("/auth/login")
+            }
+        }
+    }
     const value = {
         handleSignUp,
         handleLogin,
@@ -98,10 +167,15 @@ const AuthProvider = ({children}) =>{
         cookies,
         lodding,
         user,
-        logOut
+        logOut,
+        setButtonLodding,
+        buttonLodding,
+        handleLikes,
+        handleDislikes,
+        handleBookmark,
     }
 
-    return <AuthContext.Provider value ={value}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export default AuthProvider;
