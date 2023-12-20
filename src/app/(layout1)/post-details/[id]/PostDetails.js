@@ -105,21 +105,21 @@ function PostDetails({ id }) {
                         {parse(singlePost?.body)}
                     </div>
                     <div className='flex gap-3 justify-center py-10'>
-                        <CopyToClipboard text={`https://www.linkedin.com/in/resalat-islam/`}>
+                        <CopyToClipboard text={`https://write-something-ten.vercel.app/post-details/${id}`}>
                             <button onClick={() => toast.success('Copy success')} className='text-[#999] hover:text-dark-cyan text-2xl'><FaLink /></button>
                         </CopyToClipboard>
                         <FacebookShareButton
-                            url={`https://www.linkedin.com/in/resalat-islam/`}
+                            url={`https://write-something-ten.vercel.app/post-details/${id}`}
                         >
                             <button className='text-[#999] hover:text-dark-cyan text-2xl' ><FaFacebookSquare /></button>
                         </FacebookShareButton>
                         <TwitterShareButton
-                            url={`https://www.linkedin.com/in/resalat-islam/`}
+                            url={`https://write-something-ten.vercel.app/post-details/${id}`}
                         >
                             <button className='text-[#999] hover:text-dark-cyan text-2xl'><AiFillTwitterSquare /></button>
                         </TwitterShareButton>
                         <LinkedinShareButton
-                            url={`https://www.linkedin.com/in/resalat-islam/`}
+                            url={`https://write-something-ten.vercel.app/post-details/${id}`}
                         >
                             <button className='text-[#999] hover:text-dark-cyan text-2xl'><FaLinkedin /></button>
                         </LinkedinShareButton>

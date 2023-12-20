@@ -3,7 +3,7 @@ import { FaFacebookSquare, FaGithubSquare } from "react-icons/fa";
 import { AiFillTwitterSquare } from "react-icons/ai";
 function Footer() {
     return (
-        <div className="pt-20 max-w-[2550px] px-5">
+        <div className="pt-20 max-w-[2550px] px-5 bg-cool-mint">
             <div className="flex flex-wrap lg:flex-nowrap gap-10 lg:gap-0 lg:justify-around justify-between">
                 <div className="">
                     <h1 className="sm:text-lg text-sm font-semibold"><span className="bg-dark-cyan text-white sm:text-xl text-lg px-2">Write</span> Something</h1>

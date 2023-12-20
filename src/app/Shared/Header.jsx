@@ -23,6 +23,7 @@ const navLinks = [
 function Header() {
     const [searchToggole, setSearchToggle] = useState(false);
     const [sidebar, setSidebar] = useState(false);
+    const [search, setSearch] = useState('')
     const { user, logOut } = useContext(AuthContext)
     return (
         <nav>
@@ -68,8 +69,11 @@ function Header() {
                     <div className="relative flex items-center">
                         {
                             searchToggole ?
-                                <div className="flex items-center gap-5 slide-left absolute sm:right-full -ml-16 sm:-ml-0">
-                                    <input className="px-5 w-44 sm:w-56 lg:w-96 py-2 border border-blue-950 rounded-sm" type="text" />
+                                <div className="flex items-center gap-5 slide-left absolute sm:right-full -ml-24 sm:-ml-0">
+                                    <div className="flex items-center border border-dark-cyan rounded-sm">
+                                        <input onChange={() => setSearch(event.target.value)} className="px-5 w-40 sm:w-52 lg:w-96 py-2 " name="search" type="text" />
+                                        <Link className="px-4 bg-dark-cyan text-white py-3" href={`/search/${search}`}><AiOutlineSearch /></Link>
+                                    </div>
                                     <button onClick={() => setSearchToggle(!searchToggole)}><ImCross /></button>
                                 </div>
                                 :
