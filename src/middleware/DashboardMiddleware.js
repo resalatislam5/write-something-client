@@ -3,7 +3,7 @@ import { useContext} from "react";
 const { default: DashboardContext } = require("@/contexts/dashboardContext")
 
 const DashboardMiddleware = ({ UserProfileInfo, children }) =>{
-    const { lodding, user, cookies } = useContext(AuthContext);
+    const { lodding, user } = useContext(AuthContext);
     if (lodding){
         return
     }

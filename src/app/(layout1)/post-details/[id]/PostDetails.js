@@ -40,7 +40,9 @@ function PostDetails({ id }) {
         populerData()
     }, [])
     if (singlePost.length === 0) {
-        return <Loading />
+        return <div className="h-[40vh] flex items-center justify-center">
+            <Loading />
+        </div>
     }
     return (
         <section>
