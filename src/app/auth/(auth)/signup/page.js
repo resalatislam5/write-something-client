@@ -1,6 +1,11 @@
 import Link from "next/link";
 import SignUpFrom from "./SignUpFrom";
 
+export const metadata = {
+  title: "Sign Up - Write Something",
+  description: "Write Something",
+};
+
 function SignUpPage() { 
     return (
         <main className="bg-[#093545] px-3 sm:px-0">

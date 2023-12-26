@@ -1,6 +1,12 @@
 import { Suspense } from 'react';
 import Featured from './home/Featured';
 import Recently from './home/Recently';
+
+export const metadata = {
+  title: "Write Something",
+  description: "Write Something",
+};
+
 const HomePage = async () => {
     return (
         <div className='px-5 pt-10 max-w-[1500px] mx-auto'>

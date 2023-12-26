@@ -1,12 +1,16 @@
 import SearchResult from "./SearchResult";
 
-function SearchPage({params}) {
-    
-    return (
-        <div>
-            <SearchResult value={params.value} />
-        </div>
-    );
+export const metadata = {
+  title: "Search - Write Something",
+  description: "Write Something",
+};
+
+function SearchPage({ params }) {
+  return (
+    <div>
+      <SearchResult value={params.value} />
+    </div>
+  );
 }
 
 export default SearchPage;
