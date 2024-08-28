@@ -11,18 +11,18 @@ function Footer() {
                 </div>
                 <div className="text-davy-gray flex flex-col gap-3 ">
                     <h3 className="text-xl text-erie-black font-semibold">blogs</h3>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan inline-flex" href="/">Travel</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">Technology</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">Lifestyle</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">fashion</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">Business</Link>
+                    <Link className="text-lg hover:text-dark-cyan inline-flex" href="/">Travel</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">Technology</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">Lifestyle</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">fashion</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">Business</Link>
                 </div>
                 <div className="text-davy-gray flex flex-col gap-3 ">
                     <h3 className="text-xl text-erie-black font-semibold">Quick Links</h3>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">FAQ</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">Terms & conditions</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">support</Link>
-                    <Link className="text-lg hover:text-xl hover:text-dark-cyan" href="/">privacy policy</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">FAQ</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">Terms & conditions</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">support</Link>
+                    <Link className="text-lg hover:text-dark-cyan" href="/">privacy policy</Link>
                 </div>
                 <div className="text-davy-gray flex flex-col gap-3">
                     <h3 className="text-xl text-erie-black font-semibold">Subscribe for newsletter</h3>

@@ -1,7 +1,6 @@
 "use client"
 
 import AuthContext from "@/contexts/authContext";
-import { useSearchParams } from "next/navigation";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -13,8 +12,7 @@ function SignUpFrom() {
     const [showPasswordIconP, setShowPasswordIconP] = useState(false)
     const [showPasswordIconC, setShowPasswordIconC] = useState(false)
     const { handleSignUp, buttonLodding } = useContext(AuthContext)
-    const search = useSearchParams();
-    const from = search.get("redirectUrl") || "/";
+    const from = "/auth/login";
     const onSubmit = data =>{
         const {name, email, password, confirm} = data;
         const user = {

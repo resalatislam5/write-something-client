@@ -16,13 +16,16 @@ const AuthProvider = ({ children }) => {
     //signUp
     const handleSignUp = async (user, from) => {
         setButtonLodding(true)
-        const res = await fetch('https://write-something-server.vercel.app/auth/signup', {
-            method: 'POST',
+        const res = await fetch(
+          "https://write-something-server.vercel.app/auth/signup",
+          {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(user)
-        })
+            body: JSON.stringify(user),
+          }
+        );
         const data = await res.json();
         if (data) {
             setButtonLodding(false)
@@ -32,38 +35,49 @@ const AuthProvider = ({ children }) => {
         }
         if (data?.message) {
             toast.success(data?.message)
-            const tokan = data?.tokan
-            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
-            setUser(data.user)
+            replace(from)
+        }
+        if (data?.error) {
+            toast.error(data?.error)
             replace(from)
         }
     }
     //login
     const handleLogin = async (user, from) => {
-        setButtonLodding(true)
-        const res = await fetch('https://write-something-server.vercel.app/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user)
-        })
-        const data = await res.json();
-        if (data) {
-            setButtonLodding(false)
+      setButtonLodding(true);
+      const res = await fetch(
+        "https://write-something-server.vercel.app/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
         }
+      );
+      const data = await res.json();
+      if (data) {
+        setButtonLodding(false);
+      }
 
-
-        if (data?.message) {
-            toast.error(data?.message)
-        }
-        if (data?.user) {
-            toast.success('User login Successfully')
-            const tokan = data?.tokan
-            setCookie('cookie', { tokan, user: data.user }, { path: '/' }, { maxAge: 60 * 60 * 24 * 15 })
-            setUser(data.user)
-            replace(from)
-        }
+      if (data?.message) {
+        toast.error(data?.message);
+      }
+      if (data?.error) {
+        toast.error(data?.error);
+      }
+      if (data?.user) {
+        toast.success("User login Successfully");
+        const tokan = data?.tokan;
+        setCookie(
+          "cookie",
+          { tokan, user: data.user },
+          { path: "/" },
+          { maxAge: 60 * 60 * 24 * 15 }
+        );
+        setUser(data.user);
+        replace(from);
+      }
     }
     //logOut
     const logOut = () => {
